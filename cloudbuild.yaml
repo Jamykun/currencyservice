@@ -1,9 +1,17 @@
 ---
 steps:
+  # Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  id: build
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/pfr/currency:latest_$SHORT_SHA', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  id: Push
+  args: ['push', 'gcr.io/$PROJECT_ID/pfr/currency:latest_$SHORT_SHA']
 #Deploy de notre image
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Deploy
-  args: ['apply', '-f', './manifest/7-currency.yml']
+  args: ['apply', '-f', '7-currency.yml']
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=northamerica-northeast1-a'
   - 'CLOUDSDK_COMPUTE_REGION=northamerica-northeast1'
